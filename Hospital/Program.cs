@@ -5,12 +5,13 @@ class Program
 {
     static void Main(string[] args)
     {
+        
         AuthService authService = new AuthService();
         Admin Admin = new Admin();
         User User = new User();
         Doctor Doctor = new Doctor();
         bool exit = false;
-        
+
         while (!exit)
         {
             Console.Clear();
@@ -27,7 +28,6 @@ class Program
                 case "1":
                     authService.Register();
                     break;
-
                 case "2":
                     User user = authService.Login();
                     if (user != null)
@@ -39,6 +39,7 @@ class Program
                             Thread.Sleep(2000);
                             ShowAdminPanel(Admin);
                         }
+
                         if (user.Role == Role.User)
                         {
                             Console.Clear();
@@ -55,8 +56,8 @@ class Program
                             ShowDoctorPanel(Doctor);
                         }
                     }
-                    break;
 
+                    break;
                 case "3":
                     exit = true;
                     Console.WriteLine("Exiting...");
@@ -112,12 +113,52 @@ class Program
             }
         }
     }
+
     static void ShowUserPanel(User User)
     {
-        
+
     }
+
     static void ShowDoctorPanel(Doctor Doctor)
     {
-        
+        bool back = false;
+        while (!back)
+        {
+            Console.Clear();
+            Console.WriteLine("\n=== Doctor Panel ===");
+            Console.WriteLine("1. Add Reservation Time");
+            Console.WriteLine("2. Show Reservations");
+            Console.WriteLine("3. Logout");
+            Console.Write("Select an option: ");
+
+            string DoctorChoice = Console.ReadLine();
+
+            try
+            {
+                switch (DoctorChoice)
+                {
+                    case "1":
+                        //DoctorService.AddReservation();
+                        break;
+
+                    case "2":
+                       // DoctorService.ShowReservations();
+                        break;
+
+                    case "3":
+
+                        break;
+
+                    default:
+                        Console.WriteLine("Invalid option. Please try again.");
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
     }
 }
+

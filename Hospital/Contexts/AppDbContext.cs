@@ -9,6 +9,7 @@ public class AppDbContext : DbContext
     public DbSet<Admin> Admins { get; set; }
     public DbSet<Department> Departments { get; set; }
     public DbSet<User> Users { get; set; }
+    public DbSet<Reservation> Reservations { get; set; }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseSqlServer(connectionString);
