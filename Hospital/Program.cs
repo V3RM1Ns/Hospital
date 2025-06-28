@@ -56,7 +56,6 @@ class Program
                             ShowDoctorPanel(Doctor);
                         }
                     }
-
                     break;
                 case "3":
                     exit = true;
@@ -119,9 +118,11 @@ class Program
 
     }
 
-    static void ShowDoctorPanel(Doctor Doctor)
+    static void ShowDoctorPanel(Doctor doctor)
     {
+        var doctorService = new DoctorService(doctor.Id); // doctor.Id istifadə edilir
         bool back = false;
+
         while (!back)
         {
             Console.Clear();
@@ -131,34 +132,44 @@ class Program
             Console.WriteLine("3. Logout");
             Console.Write("Select an option: ");
 
-            string DoctorChoice = Console.ReadLine();
+            string doctorChoice = Console.ReadLine();
 
             try
             {
-                switch (DoctorChoice)
+                switch (doctorChoice)
                 {
                     case "1":
-                        //DoctorService.AddReservation();
+                        doctorService.AddReservation();
                         break;
 
                     case "2":
-                       // DoctorService.ShowReservations();
+                        doctorService.ShowReservations();
+                        Console.ReadKey(); // ekranda qalması üçün
                         break;
 
                     case "3":
-
+                        back = true;
+                        Console.WriteLine("Logging out from Doctor panel...");
                         break;
 
                     default:
                         Console.WriteLine("Invalid option. Please try again.");
+                        Thread.Sleep(2000);
                         break;
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
+
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"Inner exception: {ex.InnerException.Message}");
+                    Thread.Sleep(3000);
+                }
             }
         }
     }
+
 }
 

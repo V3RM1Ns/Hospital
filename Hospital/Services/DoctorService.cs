@@ -11,7 +11,7 @@ public class DoctorService :User, IDoctorService
         }
         
         bool alreadyExists = _context.Reservations
-            .Any(r => r.DoctorId == _doctorId && r.Date == reservationDate);
+            .Any(r => r.UserId == _UserId && r.Date == reservationDate);
 
         if (alreadyExists)
         {
@@ -21,7 +21,7 @@ public class DoctorService :User, IDoctorService
 
         var reservation = new Reservation
         {
-            DoctorId = _doctorId,
+            UserId = _UserId,
             Date = reservationDate,
             IsReserved = false
         };
@@ -34,21 +34,31 @@ public class DoctorService :User, IDoctorService
 
     public void ShowReservations()
     {
-        var reservations = _context.Reservations.ToList();
+        var reservations = _context.Reservations
+            .Where(r => r.UserId == _UserId)
+            .ToList();
+
+        if (!reservations.Any())
+        {
+            Console.WriteLine("No reservations found.");
+            return;
+        }
+
         int i = 1;
         foreach (var reservation in reservations)
         {
-            Console.WriteLine($"{i}- {reservation}");
+            Console.WriteLine($"{i++} - {reservation}");
         }
     }
+
     
     
     private readonly AppDbContext _context;
-    private readonly int _doctorId;
-    public DoctorService(int doctorId)
+    private readonly int _UserId;
+    public DoctorService(int UserId)
     {
         _context = new AppDbContext(); 
-        _doctorId = doctorId;
+        _UserId = UserId;
     }
 
 }
