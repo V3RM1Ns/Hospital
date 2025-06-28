@@ -58,17 +58,25 @@ public class AuthService
 
         string hashedPassword = PasswordHelper.HashPassword(password);
 
-        var user = _context.Users.FirstOrDefault(u => u.Name == username && u.Password == hashedPassword) ;
+        var user = _context.Users.FirstOrDefault(u => u.Name == username && u.Password == hashedPassword);
 
-        if (user != null)
-        {
-            return user;
-        }
-        else
+        if(user == null)
         {
             Console.WriteLine("Invalid username or password.");
             Thread.Sleep(2000);
             return null;
         }
+
+        // Burada user.Role-a görə fərqli tipdə obyekt yaratmaq lazımdır
+        switch(user.Role)
+        {
+            case Role.Admin:
+                return _context.Admins.FirstOrDefault(a => a.Id == user.Id) ?? user;
+            case Role.Doctor:
+                return _context.Doctors.FirstOrDefault(d => d.Id == user.Id) ?? user;
+            default:
+                return user;
+        }
     }
+
 }

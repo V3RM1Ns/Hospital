@@ -5,11 +5,7 @@ class Program
 {
     static void Main(string[] args)
     {
-        
         AuthService authService = new AuthService();
-        Admin Admin = new Admin();
-        User User = new User();
-        Doctor Doctor = new Doctor();
         bool exit = false;
 
         while (!exit)
@@ -32,31 +28,58 @@ class Program
                     User user = authService.Login();
                     if (user != null)
                     {
-                        if (user.Role == Role.Admin)
+                        bool backToMain = false;
+                        while (!backToMain)
                         {
                             Console.Clear();
-                            Console.WriteLine("Admin Logged in.");
-                            Thread.Sleep(2000);
-                            ShowAdminPanel(Admin);
-                        }
+                            Console.WriteLine($"\nWelcome, {user.Name} ({user.Role})");
+                            Console.WriteLine("1. Admin Panel");
+                            Console.WriteLine("2. Doctor Panel");
+                            Console.WriteLine("3. User Panel");
+                            Console.WriteLine("4. Logout");
+                            Console.Write("Choose a panel: ");
+                            string panelChoice = Console.ReadLine();
 
-                        if (user.Role == Role.User)
-                        {
-                            Console.Clear();
-                            Console.WriteLine("Patient Logged in.");
-                            Thread.Sleep(2000);
-                            ShowUserPanel(User);
-                        }
+                            switch (panelChoice)
+                            {
+                                case "1":
+                                    if (user.Role == Role.Admin)
+                                        ShowAdminPanel(user);
+                                    else
+                                        Console.WriteLine("❌ You are not authorized to access Admin Panel.");
+                                    break;
 
-                        if (user.Role == Role.Doctor)
-                        {
-                            Console.Clear();
-                            Console.WriteLine("Doctor Logged in.");
+                                case "2":
+                                    if (user.Role == Role.Doctor)
+                                        ShowDoctorPanel(user);
+                                    else
+                                        Console.WriteLine("❌ You are not authorized to access Doctor Panel.");
+                                    break;
+
+                                case "3":
+                                    if (user.Role == Role.User)
+                                        ShowUserPanel(user);
+                                    else
+                                        Console.WriteLine("❌ You are not authorized to access User Panel.");
+                                    break;
+
+                                case "4":
+                                    backToMain = true;
+                                    break;
+
+                                default:
+                                    Console.WriteLine("Invalid option.");
+                                    break;
+                            }
+
                             Thread.Sleep(2000);
-                            ShowDoctorPanel(Doctor);
                         }
                     }
                     break;
+
+
+
+
                 case "3":
                     exit = true;
                     Console.WriteLine("Exiting...");
@@ -68,107 +91,85 @@ class Program
             }
         }
     }
-
-    static void ShowAdminPanel(Admin Admin)
+    static void ShowAdminPanel(User user)
     {
+        var adminService = new AdminService();
         bool back = false;
+
         while (!back)
         {
             Console.Clear();
-            Console.WriteLine("\n=== Admin Panel ===");
+            Console.WriteLine("=== Admin Panel ===");
             Console.WriteLine("1. Add Department");
             Console.WriteLine("2. Add Doctor");
-            Console.WriteLine("3. Logout");
+            Console.WriteLine("3. Exit to Main Menu");
             Console.Write("Select an option: ");
 
-            string AdminChoice = Console.ReadLine();
+            string choice = Console.ReadLine();
 
-            try
+            switch (choice)
             {
-                switch (AdminChoice)
-                {
-                    case "1":
-                        Admin.AddDepartment();
-                        Console.WriteLine("Department added successfully.");
-                        break;
-
-                    case "2":
-                        Admin.AddDoctor();
-                        break;
-
-                    case "3":
-                        back = true;
-                        Console.WriteLine("Logging out from Admin panel...");
-                        break;
-
-                    default:
-                        Console.WriteLine("Invalid option. Please try again.");
-                        break;
-                }
+                case "1":
+                    adminService.AddDepartment();
+                    break;
+                case "2":
+                    adminService.AddDoctor();
+                    break;
+                case "3":
+                    back = true;
+                    break;
+                default:
+                    Console.WriteLine("Invalid option.");
+                    break;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+
+            if (!back)
+                Thread.Sleep(2000);
         }
     }
 
-    static void ShowUserPanel(User User)
+    static void ShowDoctorPanel(User user)
     {
-
-    }
-
-    static void ShowDoctorPanel(Doctor doctor)
-    {
-        var doctorService = new DoctorService(doctor.Id); // doctor.Id istifadə edilir
+        var doctorService = new DoctorService(user.Id);
         bool back = false;
 
         while (!back)
         {
             Console.Clear();
-            Console.WriteLine("\n=== Doctor Panel ===");
-            Console.WriteLine("1. Add Reservation Time");
+            Console.WriteLine("=== Doctor Panel ===");
+            Console.WriteLine("1. Add Reservation");
             Console.WriteLine("2. Show Reservations");
-            Console.WriteLine("3. Logout");
+            Console.WriteLine("3. Exit to Main Menu");
+
             Console.Write("Select an option: ");
+            
+            string choice = Console.ReadLine();
 
-            string doctorChoice = Console.ReadLine();
-
-            try
+            switch (choice)
             {
-                switch (doctorChoice)
-                {
-                    case "1":
-                        doctorService.AddReservation();
-                        break;
-
-                    case "2":
-                        doctorService.ShowReservations();
-                        Console.ReadKey(); // ekranda qalması üçün
-                        break;
-
-                    case "3":
-                        back = true;
-                        Console.WriteLine("Logging out from Doctor panel...");
-                        break;
-
-                    default:
-                        Console.WriteLine("Invalid option. Please try again.");
-                        Thread.Sleep(2000);
-                        break;
-                }
+                case "1":
+                    doctorService.AddReservation();
+                    break;
+                case "2":
+                    doctorService.ShowReservations();
+                    break;
+                case "3":
+                    back = true;
+                    break;
+                default:
+                    Console.WriteLine("Invalid option.");
+                    break;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
 
-                if (ex.InnerException != null)
-                {
-                    Console.WriteLine($"Inner exception: {ex.InnerException.Message}");
-                    Thread.Sleep(3000);
-                }
-            }
+            if (!back)
+                Thread.Sleep(2000);
         }
+    }
+
+
+    static void ShowUserPanel(User user)
+    {
+        
     }
 
 }

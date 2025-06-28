@@ -28,8 +28,9 @@ public class DoctorService :User, IDoctorService
 
         _context.Reservations.Add(reservation);
         _context.SaveChanges();
-
+        Console.Clear();
         Console.WriteLine("Time slot added successfully.");
+        Thread.Sleep(2000);
     }
 
     public void ShowReservations()
