@@ -33,7 +33,7 @@ class Program
                             Console.WriteLine($"\nWelcome, {user.Name} ({user.Role})");
                             Console.WriteLine("1. Admin Panel");
                             Console.WriteLine("2. Doctor Panel");
-                            Console.WriteLine("3. User Panel");
+                            Console.WriteLine("3. Patient Panel");
                             Console.WriteLine("4. Logout");
                             Console.Write("Choose a panel: ");
                             string panelChoice = Console.ReadLine();
@@ -55,7 +55,7 @@ class Program
                                     break;
 
                                 case "3":
-                                    if (user.Role == Role.User)
+                                    if (user.Role == Role.Patient)
                                         ShowUserPanel(user);
                                     else
                                         Console.WriteLine("❌ You are not authorized to access User Panel.");
@@ -166,8 +166,49 @@ class Program
     
     static void ShowUserPanel(User user)
     {
-        
+        IUserService userService = new UserService(); // Əgər dependency injection yoxdursa
+
+        bool back = false;
+        while (!back)
+        {
+            Console.Clear();
+            Console.WriteLine($"👤 Welcome, {user.Name} (Patient Panel)");
+            Console.WriteLine("=========================================");
+            Console.WriteLine("1. 📅 Make a Reservation");
+            Console.WriteLine("2. 📋 Show My Reservations");
+            Console.WriteLine("3. ❌ Cancel a Reservation");
+            Console.WriteLine("4. 🩺 View Medical History");
+            Console.WriteLine("5. 🔙 Back to Main Menu");
+            Console.Write("Select an option: ");
+
+            string choice = Console.ReadLine();
+
+            switch (choice)
+            {
+                case "1":
+                    userService.MakeReservation(user.Id); // istifadəçinin ID-si ötürülür
+                    break;
+                case "2":
+                    userService.ShowMyReservations();
+                    break;
+                case "3":
+                    userService.CancelReservation();
+                    break;
+                case "4":
+                    userService.ViewMedicalHistory();
+                    break;
+                case "5":
+                    back = true;
+                    break;
+                default:
+                    Console.WriteLine("❌ Invalid option. Please try again.");
+                    break;
+            }
+
+            Thread.Sleep(2000);
+        }
     }
+
 
 }
 

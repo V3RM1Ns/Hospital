@@ -61,5 +61,4 @@ public class DoctorService :User, IDoctorService
         _context = new AppDbContext(); 
         _UserId = UserId;
     }
-
 }

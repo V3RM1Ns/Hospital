@@ -39,7 +39,7 @@ public class AuthService
             Name = username,
             Password = hashedPassword,
             Email = email,
-            Role=Role.User
+            Role=Role.Patient
         };
 
         _context.Users.Add(user);
