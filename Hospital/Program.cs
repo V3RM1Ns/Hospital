@@ -1,6 +1,4 @@
-﻿using Hospital.Services;
-using Hospital.Models;
-
+﻿
 class Program
 {
     static void Main(string[] args)
@@ -165,8 +163,7 @@ class Program
                 Thread.Sleep(2000);
         }
     }
-
-
+    
     static void ShowUserPanel(User user)
     {
         

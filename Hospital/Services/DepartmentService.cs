@@ -31,4 +31,38 @@ public class DepartmentService : IDepartmentService
             i++;
         }
     }
+
+    public void GetAllDoctorsInDepartment()
+    {
+        Console.Write("Enter Department Name: ");
+        string deptName = Console.ReadLine();
+
+        Department? department = _context.Departments.FirstOrDefault(x => x.Name == deptName);
+
+        if (department == null)
+        {
+            Console.WriteLine("Department not found!");
+            Thread.Sleep(2000);
+            return;
+        }
+
+        var doctors = _context.Doctors
+            .Where(d => d.DepartmentId == department.Id)
+            .ToList();
+
+        if (doctors.Count == 0)
+        {
+            Console.WriteLine("No doctors found in this department.");
+            return;
+        }
+
+        Console.WriteLine($"\nDoctors in {department.Name}:");
+        int i = 1;
+        foreach (var doctor in doctors)
+        {
+            Console.WriteLine($"{i}. {doctor.Name}");
+            i++;
+        }
+    }
+
 }

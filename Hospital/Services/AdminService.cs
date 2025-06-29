@@ -66,6 +66,10 @@ public class AdminService:User,IAdminService
     }
     
     
+    
+    
+    
+    
     private readonly AppDbContext _appDbContext;
     private readonly DepartmentService _departmentService;
 
